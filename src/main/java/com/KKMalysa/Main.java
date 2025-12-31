@@ -9,16 +9,21 @@ import com.KKMalysa.notification.TextMessage;
 public class Main {
     public static void main(String[] args) {
 
-        Claim claim1 = new Claim(1003040L, ClaimStatus.SUBMITTED);
+        Claim claim1 = new Claim(001L, ClaimStatus.SUBMITTED);
 
         TextMessage message = new TextMessage();
         MobileApp app = new MobileApp();
         Email email = new Email();
 
         System.out.println("-----------------------------------");
-        message.updateClaimStatus(claim1);
-        app.updateClaimStatus(claim1);
-        email.updateClaimStatus(claim1);
+        claim1.registerObserver(message);
+        claim1.registerObserver(app);
+        claim1.registerObserver(email);
+
+        claim1.notifyObservers();
+        System.out.println("-----------------------------------");
+        claim1.unregisterObserver(message);
+        claim1.changeClaimStatus(ClaimStatus.ADDITIONAL_INFORMATION_REQUIRED);
         System.out.println("-----------------------------------");
 
     }

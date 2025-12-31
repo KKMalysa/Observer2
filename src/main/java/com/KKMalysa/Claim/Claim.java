@@ -1,9 +1,15 @@
 package com.KKMalysa.Claim;
 
-public class Claim {
+import com.KKMalysa.notification.Observer;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Claim implements Observable {
 
     private Long claimID;
     private ClaimStatus claimStatus;
+    private Set<Observer> registeredObservers = new HashSet<Observer>();
 
     public Claim(Long claimID, ClaimStatus claimStatus) {
         this.claimID = claimID;
@@ -27,4 +33,25 @@ public class Claim {
     }
 
 
+    @Override
+    public void registerObserver(Observer observer) {
+        registeredObservers.add(observer);
+    }
+
+    @Override
+    public void unregisterObserver(Observer observer) {
+        registeredObservers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : registeredObservers) {
+            observer.update(this);
+        }
+    }
+
+    public void changeClaimStatus(ClaimStatus newClaimStatus) {
+        setClaimStatus(newClaimStatus);
+        notifyObservers();
+    }
 }
